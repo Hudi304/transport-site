@@ -1,42 +1,15 @@
 ---
-import "../styles/global.css";
 import Layout from "../layouts/layout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Transport Company</title>
-	</head>
+<Layout title="Transport Company">
+	<section id="home" class="px-4 py-12">
+		<h1 class="text-4xl font-bold">
+			Transport Company
+		</h1>
 
-	<body class="min-h-screen bg-gray-700 text-white">
-		<Layout>
-			<main>
-				<section id="home" class="px-4 py-12">
-					<h1 class="text-4xl font-bold">Transport Company</h1>
-
-					<p class="mt-4 text-gray-300">
-						Fast and reliable transport services.
-					</p>
-				</section>
-
-				<section id="schedule" class="px-4 py-12">
-					<h2 class="text-2xl font-bold">Schedule</h2>
-
-					<p class="mt-4 text-gray-300">Schedule goes here.</p>
-				</section>
-
-				<section id="contact" class="px-4 py-12">
-					<h2 class="text-2xl font-bold">Contact</h2>
-
-					<p class="mt-4 text-gray-300">Phone: +40 xxx xxx xxx</p>
-				</section>
-			</main>
-		</Layout>
-
-	</body>
-</html>
+		<p class="mt-4 text-gray-300">
+			Fast and reliable transport services.
+		</p>
+	</section>
+</Layout>
