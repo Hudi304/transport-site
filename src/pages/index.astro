@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
-import Navigataion from "../components/navigataion.astro";
-("../components/navigataion.astro");
+import Layout from "../layouts/layout.astro";
 ---
 
 <html lang="en">
@@ -15,27 +14,29 @@ import Navigataion from "../components/navigataion.astro";
 	</head>
 
 	<body class="min-h-screen bg-gray-700 text-white">
-		<Navigataion />
-		<main>
-			<section id="home" class="px-4 py-12">
-				<h1 class="text-4xl font-bold">Transport Company</h1>
+		<Layout>
+			<main>
+				<section id="home" class="px-4 py-12">
+					<h1 class="text-4xl font-bold">Transport Company</h1>
 
-				<p class="mt-4 text-gray-300">
-					Fast and reliable transport services.
-				</p>
-			</section>
+					<p class="mt-4 text-gray-300">
+						Fast and reliable transport services.
+					</p>
+				</section>
 
-			<section id="schedule" class="px-4 py-12">
-				<h2 class="text-2xl font-bold">Schedule</h2>
+				<section id="schedule" class="px-4 py-12">
+					<h2 class="text-2xl font-bold">Schedule</h2>
 
-				<p class="mt-4 text-gray-300">Schedule goes here.</p>
-			</section>
+					<p class="mt-4 text-gray-300">Schedule goes here.</p>
+				</section>
 
-			<section id="contact" class="px-4 py-12">
-				<h2 class="text-2xl font-bold">Contact</h2>
+				<section id="contact" class="px-4 py-12">
+					<h2 class="text-2xl font-bold">Contact</h2>
 
-				<p class="mt-4 text-gray-300">Phone: +40 xxx xxx xxx</p>
-			</section>
-		</main>
+					<p class="mt-4 text-gray-300">Phone: +40 xxx xxx xxx</p>
+				</section>
+			</main>
+		</Layout>
+
 	</body>
 </html>
