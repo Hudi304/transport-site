@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import Navigataion from "../components/navigataion.astro";
+("../components/navigataion.astro");
 ---
 
 <html lang="en">
@@ -13,113 +15,27 @@ import "../styles/global.css";
 	</head>
 
 	<body class="min-h-screen bg-gray-700 text-white">
-		<header class="bg-slate-800">
-			<div
-				class="h-16 px-4 flex items-center justify-between"
-			>
-				<div class="font-bold text-lg">
-					Transport
-				</div>
-
-				<button
-					id="menu-button"
-					class="w-12 h-12 flex items-center justify-center text-2xl"
-					aria-label="Open navigation menu"
-				>
-					☰
-				</button>
-			</div>
-
-			<nav
-				id="mobile-menu"
-				class="max-h-0 overflow-hidden transition-all duration-300 bg-slate-900"
-			>
-				<a
-					href="#home"
-					class="block px-4 py-4 border-b border-slate-700"
-				>
-					Home
-				</a>
-
-				<a
-					href="#schedule"
-					class="block px-4 py-4 border-b border-slate-700"
-				>
-					Schedule
-				</a>
-
-				<a
-					href="#contact"
-					class="block px-4 py-4 border-b border-slate-700"
-				>
-					Contact
-				</a>
-
-				<a
-					href="https://wa.me/40123456789"
-					class="block px-4 py-4 text-center font-semibold bg-green-600"
-				>
-					Book on WhatsApp
-				</a>
-			</nav>
-		</header>
-
+		<Navigataion />
 		<main>
-			<section
-				id="home"
-				class="px-4 py-12"
-			>
-				<h1 class="text-4xl font-bold">
-					Transport Company
-				</h1>
+			<section id="home" class="px-4 py-12">
+				<h1 class="text-4xl font-bold">Transport Company</h1>
 
 				<p class="mt-4 text-gray-300">
 					Fast and reliable transport services.
 				</p>
 			</section>
 
-			<section
-				id="schedule"
-				class="px-4 py-12"
-			>
-				<h2 class="text-2xl font-bold">
-					Schedule
-				</h2>
+			<section id="schedule" class="px-4 py-12">
+				<h2 class="text-2xl font-bold">Schedule</h2>
 
-				<p class="mt-4 text-gray-300">
-					Schedule goes here.
-				</p>
+				<p class="mt-4 text-gray-300">Schedule goes here.</p>
 			</section>
 
-			<section
-				id="contact"
-				class="px-4 py-12"
-			>
-				<h2 class="text-2xl font-bold">
-					Contact
-				</h2>
+			<section id="contact" class="px-4 py-12">
+				<h2 class="text-2xl font-bold">Contact</h2>
 
-				<p class="mt-4 text-gray-300">
-					Phone: +40 xxx xxx xxx
-				</p>
+				<p class="mt-4 text-gray-300">Phone: +40 xxx xxx xxx</p>
 			</section>
 		</main>
-
-		<script>
-			const button = document.getElementById("menu-button");
-			const menu = document.getElementById("mobile-menu");
-
-			button?.addEventListener("click", () => {
-				const isOpen = menu?.classList.contains("max-h-96");
-
-				if (isOpen) {
-					menu?.classList.remove("max-h-96");
-					menu?.classList.add("max-h-0");
-				} else {
-					menu?.classList.remove("max-h-0");
-					menu?.classList.add("max-h-96");
-				}
-			});
-		</script>
 	</body>
 </html>
