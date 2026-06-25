@@ -7,13 +7,16 @@ import type { Stop, Departure } from "./types";
 export class Waypoint {
 	readonly id: string;
 
-	private constructor(readonly name: string) {
+	private constructor(
+		readonly name: string,
+		readonly coords?: [number, number],
+	) {
 		this.id = Waypoint.toId(name);
 	}
 
 	/** Create a waypoint. `id` is slugified from `name` ("Târgu Jiu" → "targu_jiu"). */
-	static new(name: string): Waypoint {
-		return new Waypoint(name);
+	static new(name: string, coords?: [number, number]): Waypoint {
+		return new Waypoint(name, coords);
 	}
 
 	private static toId(name: string): string {
@@ -126,12 +129,12 @@ export class Route {
 		for (const seg of segments) {
 			if (!seen.has(seg.from.id)) {
 				seen.add(seg.from.id);
-				result.push({ id: seg.from.id, name: seg.from.name, deltaMinutes: elapsed });
+				result.push({ id: seg.from.id, name: seg.from.name, deltaMinutes: elapsed, coords: seg.from.coords });
 			}
 			elapsed += seg.durationMinutes;
 			if (!seen.has(seg.to.id)) {
 				seen.add(seg.to.id);
-				result.push({ id: seg.to.id, name: seg.to.name, deltaMinutes: elapsed });
+				result.push({ id: seg.to.id, name: seg.to.name, deltaMinutes: elapsed, coords: seg.to.coords });
 			}
 		}
 

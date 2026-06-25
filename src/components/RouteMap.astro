@@ -1,6 +1,5 @@
 ---
 import { routes } from "../data/schedule";
-import { waypointCoords } from "../data/geography";
 import { useTranslations, defaultLocale } from "../i18n/index";
 import type { Locale } from "../i18n/index";
 
@@ -10,14 +9,6 @@ interface Props {
 
 const { lang = defaultLocale } = Astro.props;
 const t = useTranslations(lang);
-
-// Build a stop name lookup from all routes
-const nameMap: Record<string, string> = {};
-for (const route of routes) {
-	for (const stop of route.stops) {
-		nameMap[stop.id] = stop.name;
-	}
-}
 
 // Deduplicate outbound + return down to one entry per physical road.
 // Canonical ID = sorted([origin.id, destination.id]).join("--")
@@ -35,10 +26,9 @@ for (const route of routes) {
 
 	clientRoutes.push({
 		label: route.heading,
-		waypoints: route.stops.map((s) => ({
-			name: s.name,
-			coord: waypointCoords[s.id] as [number, number],
-		})),
+		waypoints: route.stops
+			.filter((s) => s.coords)
+			.map((s) => ({ name: s.name, coord: s.coords! })),
 	});
 }
 

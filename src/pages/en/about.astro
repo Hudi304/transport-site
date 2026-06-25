@@ -6,8 +6,47 @@ const t = useTranslations("en");
 ---
 
 <Layout title={t.about.title} lang="en">
+	<section class="px-4 py-16">
+		<h1 class="text-4xl font-bold leading-tight">{t.about.title}</h1>
+		<p class="mt-4 max-w-xl text-lg text-gray-300">{t.about.tagline}</p>
+	</section>
+
+	<section class="bg-slate-800 px-4 py-10">
+		<div class="grid grid-cols-2 gap-6 sm:grid-cols-4">
+			{
+				t.about.stats.map((s) => (
+					<div class="text-center">
+						<p class="text-4xl font-bold text-white">{s.value}</p>
+						<p class="mt-1 text-sm text-gray-400">{s.label}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
 	<section class="px-4 py-12">
-		<h1 class="text-4xl font-bold">{t.about.title}</h1>
-		<p class="mt-6 text-gray-300">{t.about.description}</p>
+		<h2 class="text-2xl font-bold">{t.about.story.heading}</h2>
+		<div class="mt-6 max-w-2xl space-y-4">
+			{
+				t.about.story.paragraphs.map((p) => (
+					<p class="text-gray-300 leading-relaxed">{p}</p>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="bg-slate-800 px-4 py-12">
+		<h2 class="text-2xl font-bold">{t.about.values.heading}</h2>
+		<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+			{
+				t.about.values.items.map((v) => (
+					<div class="rounded-lg bg-slate-700 p-6">
+						<p class="text-3xl">{v.icon}</p>
+						<h3 class="mt-3 text-lg font-semibold">{v.title}</h3>
+						<p class="mt-2 text-sm text-gray-300">{v.description}</p>
+					</div>
+				))
+			}
+		</div>
 	</section>
 </Layout>

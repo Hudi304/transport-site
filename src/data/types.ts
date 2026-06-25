@@ -13,6 +13,7 @@ export interface Stop {
 	id: string;
 	name: string;
 	deltaMinutes: number;
+	coords?: [number, number];
 }
 
 export interface Departure {

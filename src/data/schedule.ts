@@ -1,14 +1,14 @@
 import { Waypoint, Route } from "./route";
 
-const targuJiu        = Waypoint.new("Târgu Jiu");
-const pitesti         = Waypoint.new("Pitești");
-const bumbestii       = Waypoint.new("Bumbești");
-const craiova         = Waypoint.new("Craiova");
-const otopeniAeroport = Waypoint.new("Otopeni (Aeroport)");
+const targuJiu        = Waypoint.new("Târgu Jiu",          [45.0353, 23.2750]);
+const pitesti         = Waypoint.new("Pitești",            [44.8565, 24.8691]);
+const bumbesti        = Waypoint.new("Bumbești",           [45.1547, 23.4013]);
+const craiova         = Waypoint.new("Craiova",            [44.3302, 23.7949]);
+const otopeniAeroport = Waypoint.new("Otopeni (Aeroport)", [44.5722, 26.0850]);
 
 const targuJiuCraiova = Route.new(targuJiu, craiova)
-	.via(bumbestii, 30)
-	.via(craiova,   60);
+	.via(bumbesti, 30)
+	.via(craiova,  60);
 
 const targuJiuOtopeni = Route.new(targuJiu, otopeniAeroport)
 	.via(pitesti,         75)
