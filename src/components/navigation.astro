@@ -143,10 +143,15 @@ const navLinks = [
 		link.addEventListener("click", (e) => {
 			e.preventDefault();
 			const href = (e.currentTarget as HTMLAnchorElement).href;
+			const isOpen = menu?.classList.contains("translate-x-0") ?? false;
 			closeMenu();
-			menu?.addEventListener("transitionend", () => {
+			if (isOpen) {
+				menu?.addEventListener("transitionend", () => {
+					window.location.href = href;
+				}, { once: true });
+			} else {
 				window.location.href = href;
-			}, { once: true });
+			}
 		});
 	});
 </script>

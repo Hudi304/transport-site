@@ -1,16 +1,4 @@
 ---
-import Layout from "../layouts/layout.astro";
-import ScheduleTable from "../components/ScheduleTable.astro";
-import { useTranslations, defaultLocale } from "../i18n/index";
-import type { Locale } from "../i18n/index";
-
-const lang = (Astro.currentLocale ?? defaultLocale) as Locale;
-const t = useTranslations(lang);
+import SchedulePage from "../components/pages/SchedulePage.astro";
 ---
-
-<Layout title={t.schedule.title} lang={lang}>
-	<section class="px-6 lg:px-10 py-12">
-		<h1 class="text-4xl font-bold">{t.schedule.title}</h1>
-		<ScheduleTable lang={lang} />
-	</section>
-</Layout>
+<SchedulePage />

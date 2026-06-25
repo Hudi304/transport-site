@@ -57,7 +57,7 @@ const routeDataJson = JSON.stringify(clientRoutes);
 		</div>
 	</div>
 
-	<script type="application/json" id="route-data" set:html={routeDataJson}></script>
+	<script type="application/json" id="route-data" set:text={routeDataJson}></script>
 </section>
 
 <script>
@@ -76,7 +76,7 @@ const routeDataJson = JSON.stringify(clientRoutes);
 		const legendEl = document.getElementById("route-legend");
 		if (!dataEl || !mapEl || !legendEl) return;
 
-		const data: ClientRoute[] = JSON.parse(dataEl.textContent ?? "[]");
+		const data: ClientRoute[] = JSON.parse(dataEl.textContent || "[]");
 
 		const map = L.map(mapEl, { scrollWheelZoom: false, attributionControl: false });
 
@@ -108,7 +108,11 @@ const routeDataJson = JSON.stringify(clientRoutes);
 					fillOpacity: 1,
 				})
 					.addTo(map)
-					.bindPopup(`<strong>${wp.name}</strong>`);
+					.bindPopup(() => {
+						const el = document.createElement("strong");
+						el.textContent = wp.name;
+						return el;
+					});
 			});
 
 			const badge = document.createElement("span");
