@@ -10,12 +10,12 @@ const waUrl = `https://wa.me/40123456789?text=${encodeURIComponent(t.private.cta
 ---
 
 <Layout title={t.private.title} lang={lang}>
-	<section class="px-4 py-16">
+	<section class="px-6 lg:px-10 py-16">
 		<h1 class="text-4xl font-bold leading-tight">{t.private.title}</h1>
 		<p class="mt-4 max-w-xl text-lg text-gray-300">{t.private.tagline}</p>
 	</section>
 
-	<section class="bg-slate-800 px-4 py-12">
+	<section class="bg-slate-800 px-6 lg:px-10 py-12">
 		<h2 class="text-2xl font-bold">{t.private.occasions.heading}</h2>
 		<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{
@@ -30,7 +30,7 @@ const waUrl = `https://wa.me/40123456789?text=${encodeURIComponent(t.private.cta
 		</div>
 	</section>
 
-	<section class="px-4 py-12">
+	<section class="px-6 lg:px-10 py-12">
 		<h2 class="text-2xl font-bold">{t.private.howItWorks.heading}</h2>
 		<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
 			{
@@ -47,7 +47,7 @@ const waUrl = `https://wa.me/40123456789?text=${encodeURIComponent(t.private.cta
 		</div>
 	</section>
 
-	<section class="bg-slate-800 px-4 py-12">
+	<section class="bg-slate-800 px-6 lg:px-10 py-12">
 		<h2 class="text-2xl font-bold">{t.private.cta.heading}</h2>
 		<p class="mt-2 max-w-lg text-gray-300">{t.private.cta.description}</p>
 

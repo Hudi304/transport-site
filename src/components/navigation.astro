@@ -6,21 +6,53 @@ import type { Locale } from "../i18n/index";
 const lang = (Astro.currentLocale ?? defaultLocale) as Locale;
 const t = useTranslations(lang);
 
-const homeUrl = getRelativeLocaleUrl(lang, "/");
+const homeUrl     = getRelativeLocaleUrl(lang, "/");
 const scheduleUrl = getRelativeLocaleUrl(lang, "/schedule");
-const privateUrl = getRelativeLocaleUrl(lang, "/private");
-const aboutUrl = getRelativeLocaleUrl(lang, "/about");
-const contactUrl = getRelativeLocaleUrl(lang, "/contact");
+const privateUrl  = getRelativeLocaleUrl(lang, "/private");
+const aboutUrl    = getRelativeLocaleUrl(lang, "/about");
+const contactUrl  = getRelativeLocaleUrl(lang, "/contact");
 
-const slug = Astro.url.pathname.replace(/^\/en/, "") || "/";
+// Strip base path first, then locale prefix — getRelativeLocaleUrl re-adds both
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const pathWithoutBase = Astro.url.pathname.slice(basePath.length) || "/";
+const slug  = pathWithoutBase.replace(/^\/en/, "") || "/";
 const roUrl = getRelativeLocaleUrl("ro", slug);
 const enUrl = getRelativeLocaleUrl("en", slug);
+
+const current = slug.replace(/\/$/, "") || "/";
+
+function isActive(path: string) {
+	if (path === "/") return current === "/";
+	return current.startsWith(path);
+}
+
+const navLinks = [
+	{ href: homeUrl,     label: t.nav.home,     path: "/"         },
+	{ href: scheduleUrl, label: t.nav.schedule,  path: "/schedule" },
+	{ href: privateUrl,  label: t.nav.private,   path: "/private"  },
+	{ href: aboutUrl,    label: t.nav.about,     path: "/about"    },
+	{ href: contactUrl,  label: t.nav.contact,   path: "/contact"  },
+];
 ---
 
-<header
-	class="sticky top-0 z-40 h-16 bg-slate-800 px-4 flex items-center justify-between text-white"
->
+<header class="sticky top-0 z-40 h-16 bg-slate-800 px-6 flex items-center justify-between text-white max-w-6xl mx-auto">
 	<div class="text-lg font-bold">Transport</div>
+
+	<!-- Desktop nav -->
+	<nav class="hidden lg:flex items-center gap-1">
+		{navLinks.map(({ href, label, path }) => (
+			<a
+				href={href}
+				class={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+					isActive(path)
+						? "bg-slate-700 text-white"
+						: "text-gray-300 hover:bg-slate-700 hover:text-white"
+				}`}
+			>
+				{label}
+			</a>
+		))}
+	</nav>
 
 	<div class="flex items-center gap-4">
 		<div class="flex items-center gap-2 text-sm font-semibold">
@@ -31,7 +63,7 @@ const enUrl = getRelativeLocaleUrl("en", slug);
 
 		<button
 			id="menu-button"
-			class="w-12 h-12 flex items-center justify-center text-2xl"
+			class="lg:hidden w-12 h-12 flex items-center justify-center text-2xl"
 			aria-label="Open navigation menu"
 		>
 			☰
@@ -39,9 +71,10 @@ const enUrl = getRelativeLocaleUrl("en", slug);
 	</div>
 </header>
 
+<!-- Mobile drawer (unchanged) -->
 <nav
 	id="mobile-menu"
-	class="fixed inset-0 z-50 max-w-[85vw] bg-slate-900/95 backdrop-blur-sm text-white -translate-x-full transition-transform duration-300 ease-out"
+	class="fixed inset-0 z-[9999] max-w-[85vw] bg-slate-900/95 backdrop-blur-sm text-white -translate-x-full transition-transform duration-300 ease-out"
 >
 	<div class="h-16 px-4 flex items-center justify-end">
 		<button
@@ -67,12 +100,12 @@ const enUrl = getRelativeLocaleUrl("en", slug);
 			{t.nav.schedule}
 		</a>
 		<a href={privateUrl} class="py-4 flex items-center gap-4 text-3xl font-semibold">
-				<svg class="w-8 h-8 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-				</svg>
-				{t.nav.private}
-			</a>
-			<a href={aboutUrl} class="py-4 flex items-center gap-4 text-3xl font-semibold">
+			<svg class="w-8 h-8 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+			</svg>
+			{t.nav.private}
+		</a>
+		<a href={aboutUrl} class="py-4 flex items-center gap-4 text-3xl font-semibold">
 			<svg class="w-8 h-8 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 				<path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
 			</svg>
@@ -106,7 +139,7 @@ const enUrl = getRelativeLocaleUrl("en", slug);
 
 	openButton?.addEventListener("click", openMenu);
 	closeButton?.addEventListener("click", closeMenu);
-	document.querySelectorAll("nav a").forEach((link) => {
+	document.querySelectorAll("#mobile-menu a").forEach((link) => {
 		link.addEventListener("click", (e) => {
 			e.preventDefault();
 			const href = (e.currentTarget as HTMLAnchorElement).href;

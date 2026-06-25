@@ -35,23 +35,25 @@ for (const route of routes) {
 const routeDataJson = JSON.stringify(clientRoutes);
 ---
 
-<section class="px-4 py-12 bg-slate-800">
+<section class="px-6 lg:px-10 py-12 bg-slate-800">
 	<h2 class="text-2xl font-bold">{t.mapSection.heading}</h2>
 	<p class="mt-2 text-sm text-gray-400">{t.mapSection.subheading}</p>
 
 	<div id="route-legend" class="mt-4 flex flex-wrap gap-3"></div>
 
-	<div
-		id="route-map"
-		class="mt-4 rounded-lg overflow-hidden"
-		style="height: 380px; background: #1e293b;"
-		aria-label={t.mapSection.heading}
-	>
+	<div id="route-map-wrapper" class="mt-4 rounded-xl transition-shadow duration-200">
 		<div
-			id="map-placeholder"
-			class="w-full h-full flex items-center justify-center text-gray-500 text-sm"
+			id="route-map"
+			class="rounded-xl overflow-hidden cursor-pointer"
+			style="height: 380px; background: #1e293b;"
+			aria-label={t.mapSection.heading}
 		>
-			{t.mapSection.loading}
+			<div
+				id="map-placeholder"
+				class="w-full h-full flex items-center justify-center text-gray-500 text-sm"
+			>
+				{t.mapSection.loading}
+			</div>
 		</div>
 	</div>
 
@@ -122,6 +124,23 @@ const routeDataJson = JSON.stringify(clientRoutes);
 		}
 
 		document.getElementById("map-placeholder")?.remove();
+
+		// Click-to-focus: enable scroll zoom + show border; click outside to release
+		const wrapper = document.getElementById("route-map-wrapper");
+
+		mapEl.addEventListener("click", () => {
+			map.scrollWheelZoom.enable();
+			wrapper?.classList.add("ring-2", "ring-green-400");
+			mapEl.style.cursor = "grab";
+		});
+
+		document.addEventListener("click", (e) => {
+			if (mapEl && !mapEl.contains(e.target as Node)) {
+				map.scrollWheelZoom.disable();
+				wrapper?.classList.remove("ring-2", "ring-green-400");
+				mapEl.style.cursor = "pointer";
+			}
+		});
 	}
 
 	// Lazy-init: only load Leaflet tiles when the section enters the viewport

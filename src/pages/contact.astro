@@ -12,12 +12,12 @@ const initialMessage = t.contact.cta.message.replace("{route}", "");
 ---
 
 <Layout title={t.contact.title} lang={lang}>
-	<section class="px-4 py-16">
+	<section class="px-6 lg:px-10 py-16">
 		<h1 class="text-4xl font-bold leading-tight">{t.contact.title}</h1>
 		<p class="mt-4 text-lg text-gray-300">{t.contact.tagline}</p>
 	</section>
 
-	<section class="bg-slate-800 px-4 py-12">
+	<section class="bg-slate-800 px-6 lg:px-10 py-12">
 		<h2 class="text-2xl font-bold">{t.contact.channels.heading}</h2>
 		<div class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
 			<div class="rounded-lg bg-slate-700 p-6">
@@ -38,7 +38,7 @@ const initialMessage = t.contact.cta.message.replace("{route}", "");
 		</div>
 	</section>
 
-	<section class="px-4 py-12">
+	<section class="px-6 lg:px-10 py-12">
 		<h2 class="text-2xl font-bold">{t.contact.cta.heading}</h2>
 		<p class="mt-2 max-w-lg text-gray-300">{t.contact.cta.description}</p>
 
