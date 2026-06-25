@@ -1,5 +1,19 @@
 ---
-// src/components/Navigation.astro
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { useTranslations, defaultLocale } from "../i18n/index";
+import type { Locale } from "../i18n/index";
+
+const lang = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = useTranslations(lang);
+
+const homeUrl = getRelativeLocaleUrl(lang, "/");
+const scheduleUrl = getRelativeLocaleUrl(lang, "/schedule");
+const aboutUrl = getRelativeLocaleUrl(lang, "/about");
+const contactUrl = getRelativeLocaleUrl(lang, "/contact");
+
+const slug = Astro.url.pathname.replace(/^\/en/, "") || "/";
+const roUrl = getRelativeLocaleUrl("ro", slug);
+const enUrl = getRelativeLocaleUrl("en", slug);
 ---
 
 <header
@@ -7,13 +21,21 @@
 >
 	<div class="text-lg font-bold">Transport</div>
 
-	<button
-		id="menu-button"
-		class="w-12 h-12 flex items-center justify-center text-2xl"
-		aria-label="Open navigation menu"
-	>
-		☰
-	</button>
+	<div class="flex items-center gap-4">
+		<div class="flex items-center gap-2 text-sm font-semibold">
+			<a href={roUrl} class={lang === "ro" ? "text-white" : "text-gray-400 hover:text-white"}>RO</a>
+			<span class="text-gray-500">|</span>
+			<a href={enUrl} class={lang === "en" ? "text-white" : "text-gray-400 hover:text-white"}>EN</a>
+		</div>
+
+		<button
+			id="menu-button"
+			class="w-12 h-12 flex items-center justify-center text-2xl"
+			aria-label="Open navigation menu"
+		>
+			☰
+		</button>
+	</div>
 </header>
 
 <nav
@@ -31,13 +53,10 @@
 	</div>
 
 	<div class="flex flex-col px-6 pt-8">
-		<a href="/" class="py-4 text-3xl font-semibold"> Home </a>
-
-		<a href="/schedule" class="py-4 text-3xl font-semibold"> Schedule </a>
-
-		<a href="/about" class="py-4 text-3xl font-semibold"> About </a>
-
-		<a href="/contact" class="py-4 text-3xl font-semibold"> Contact </a>
+		<a href={homeUrl} class="py-4 text-3xl font-semibold">{t.nav.home}</a>
+		<a href={scheduleUrl} class="py-4 text-3xl font-semibold">{t.nav.schedule}</a>
+		<a href={aboutUrl} class="py-4 text-3xl font-semibold">{t.nav.about}</a>
+		<a href={contactUrl} class="py-4 text-3xl font-semibold">{t.nav.contact}</a>
 	</div>
 </nav>
 
@@ -60,4 +79,14 @@
 
 	openButton?.addEventListener("click", openMenu);
 	closeButton?.addEventListener("click", closeMenu);
+	document.querySelectorAll("nav a").forEach((link) => {
+		link.addEventListener("click", (e) => {
+			e.preventDefault();
+			const href = (e.currentTarget as HTMLAnchorElement).href;
+			closeMenu();
+			menu?.addEventListener("transitionend", () => {
+				window.location.href = href;
+			}, { once: true });
+		});
+	});
 </script>

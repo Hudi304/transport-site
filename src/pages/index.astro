@@ -1,15 +1,15 @@
 ---
 import Layout from "../layouts/layout.astro";
+import { useTranslations, defaultLocale } from "../i18n/index";
+import type { Locale } from "../i18n/index";
+
+const lang = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = useTranslations(lang);
 ---
 
-<Layout title="Transport Company">
-	<section id="home" class="px-4 py-12">
-		<h1 class="text-4xl font-bold">
-			Transport Company
-		</h1>
-
-		<p class="mt-4 text-gray-300">
-			Fast and reliable transport services.
-		</p>
+<Layout title={t.home.title} lang={lang}>
+	<section class="px-4 py-12">
+		<h1 class="text-4xl font-bold">{t.home.title}</h1>
+		<p class="mt-4 text-gray-300">{t.home.subtitle}</p>
 	</section>
 </Layout>

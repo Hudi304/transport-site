@@ -1,0 +1,13 @@
+---
+import Layout from "../../layouts/layout.astro";
+import { useTranslations } from "../../i18n/index";
+
+const t = useTranslations("en");
+---
+
+<Layout title={t.about.title} lang="en">
+	<section class="px-4 py-12">
+		<h1 class="text-4xl font-bold">{t.about.title}</h1>
+		<p class="mt-6 text-gray-300">{t.about.description}</p>
+	</section>
+</Layout>

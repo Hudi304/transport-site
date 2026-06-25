@@ -1,13 +1,11 @@
 ---
-import Layout from "../layouts/layout.astro";
-import { useTranslations, defaultLocale } from "../i18n/index";
-import type { Locale } from "../i18n/index";
+import Layout from "../../layouts/layout.astro";
+import { useTranslations } from "../../i18n/index";
 
-const lang = (Astro.currentLocale ?? defaultLocale) as Locale;
-const t = useTranslations(lang);
+const t = useTranslations("en");
 ---
 
-<Layout title={t.schedule.title} lang={lang}>
+<Layout title={t.schedule.title} lang="en">
 	<section class="px-4 py-12">
 		<h1 class="text-4xl font-bold">{t.schedule.title}</h1>
 

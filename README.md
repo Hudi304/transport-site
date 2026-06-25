@@ -1,43 +1,87 @@
-# Astro Starter Kit: Minimal
+# Transport Site
+
+Marketing site for a passenger transport company. Built with Astro + Tailwind CSS.
+
+## Commands
+
+| Command           | Action                                      |
+| :---------------- | :------------------------------------------ |
+| `npm install`     | Install dependencies                        |
+| `npm run dev`     | Start dev server at `localhost:4321`        |
+| `npm run build`   | Build to `./dist/`                          |
+| `npm run preview` | Preview the production build locally        |
+
+## Editing content
+
+All site text lives in `src/i18n/`. Each language is a single file:
+
+```
+src/i18n/
+├── ro.ts   ← Romanian
+├── en.ts   ← English
+└── index.ts
+```
+
+Open the relevant file and edit the strings directly. The structure is the same across all language files.
+
+## Adding a new language
+
+**1. Create a translation file**
+
+Copy an existing one and translate the strings:
 
 ```sh
-npm create astro@latest -- --template minimal
+cp src/i18n/en.ts src/i18n/de.ts
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Then open `src/i18n/de.ts` and replace the English text with the new language.
 
-## 🚀 Project Structure
+**2. Register the language**
 
-Inside of your Astro project, you'll see the following folders and files:
+In `src/i18n/index.ts`, import the new file and add it to the `translations` object and `locales` array:
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```ts
+import ro from "./ro";
+import en from "./en";
+import de from "./de"; // add this
+
+const translations = { ro, en, de } as const; // add de here
+
+export const locales: Locale[] = ["ro", "en", "de"]; // add de here
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+**3. Add it to Astro's routing config**
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+In `astro.config.mjs`, add the locale to the `locales` array:
 
-Any static assets, like images, can be placed in the `public/` directory.
+```js
+i18n: {
+  defaultLocale: "ro",
+  locales: ["ro", "en", "de"], // add de here
+  ...
+}
+```
 
-## 🧞 Commands
+**4. Create the page files**
 
-All commands are run from the root of the project, from a terminal:
+Copy an existing locale folder and rename it:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```sh
+cp -r src/pages/en src/pages/de
+```
 
-## 👀 Want to learn more?
+Then open each file in `src/pages/de/` and change `"en"` to `"de"` in the two places it appears (the `useTranslations` call and the `lang` prop).
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+**5. Add the switcher link in navigation**
+
+In `src/components/navigation.astro`, add the URL and the link button:
+
+```astro
+// in the frontmatter
+const deUrl = getRelativeLocaleUrl("de", slug);
+```
+
+```astro
+// in the template, next to the existing RO | EN links
+<a href={deUrl} class={lang === "de" ? "text-white" : "text-gray-400 hover:text-white"}>DE</a>
+```
