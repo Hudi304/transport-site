@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/layout.astro";
 import { useTranslations } from "../../i18n/index";
+import RouteMap from "../../components/RouteMap.astro";
 
 const t = useTranslations("en");
 ---
@@ -31,6 +32,8 @@ const t = useTranslations("en");
 			}
 		</div>
 	</section>
+
+	<RouteMap lang="en" />
 
 	<section class="mt-8 bg-slate-900 px-4 py-12">
 		<h2 class="text-2xl font-bold">{t.home.contactStrip.heading}</h2>

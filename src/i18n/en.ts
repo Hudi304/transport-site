@@ -57,6 +57,11 @@ export default {
 			stop: "Stop",
 		},
 	},
+	mapSection: {
+		heading: "Our routes",
+		subheading: "Direct routes, no transfers.",
+		loading: "Loading map…",
+	},
 	contact: {
 		title: "Contact",
 		phone: "Phone",

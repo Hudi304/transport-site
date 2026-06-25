@@ -57,6 +57,11 @@ export default {
 			stop: "Localitate",
 		},
 	},
+	mapSection: {
+		heading: "Traseele noastre",
+		subheading: "Trasee directe, fără schimburi.",
+		loading: "Se încarcă harta…",
+	},
 	contact: {
 		title: "Contact",
 		phone: "Telefon",

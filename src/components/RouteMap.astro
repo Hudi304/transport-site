@@ -1,0 +1,152 @@
+---
+import { routes } from "../data/schedule";
+import { waypointCoords } from "../data/geography";
+import { useTranslations, defaultLocale } from "../i18n/index";
+import type { Locale } from "../i18n/index";
+
+interface Props {
+	lang?: Locale;
+}
+
+const { lang = defaultLocale } = Astro.props;
+const t = useTranslations(lang);
+
+// Build a stop name lookup from all routes
+const nameMap: Record<string, string> = {};
+for (const route of routes) {
+	for (const stop of route.stops) {
+		nameMap[stop.id] = stop.name;
+	}
+}
+
+// Deduplicate outbound + return down to one entry per physical road.
+// Canonical ID = sorted([origin.id, destination.id]).join("--")
+// schedule.ts always puts .departing() before .reversed(), so first-seen = outbound direction.
+type ClientWaypoint = { name: string; coord: [number, number] };
+type ClientRoute = { label: string; waypoints: ClientWaypoint[] };
+
+const seen = new Set<string>();
+const clientRoutes: ClientRoute[] = [];
+
+for (const route of routes) {
+	const key = [route.origin.id, route.destination.id].sort().join("--");
+	if (seen.has(key)) continue;
+	seen.add(key);
+
+	clientRoutes.push({
+		label: route.heading,
+		waypoints: route.stops.map((s) => ({
+			name: s.name,
+			coord: waypointCoords[s.id] as [number, number],
+		})),
+	});
+}
+
+const routeDataJson = JSON.stringify(clientRoutes);
+---
+
+<section class="px-4 py-12 bg-slate-800">
+	<h2 class="text-2xl font-bold">{t.mapSection.heading}</h2>
+	<p class="mt-2 text-sm text-gray-400">{t.mapSection.subheading}</p>
+
+	<div id="route-legend" class="mt-4 flex flex-wrap gap-3"></div>
+
+	<div
+		id="route-map"
+		class="mt-4 rounded-lg overflow-hidden"
+		style="height: 380px; background: #1e293b;"
+		aria-label={t.mapSection.heading}
+	>
+		<div
+			id="map-placeholder"
+			class="w-full h-full flex items-center justify-center text-gray-500 text-sm"
+		>
+			{t.mapSection.loading}
+		</div>
+	</div>
+
+	<script type="application/json" id="route-data" set:html={routeDataJson}></script>
+</section>
+
+<script>
+	import L from "leaflet";
+	import "leaflet/dist/leaflet.css";
+
+	type Coord = [number, number];
+	type ClientWaypoint = { name: string; coord: Coord };
+	type ClientRoute = { label: string; waypoints: ClientWaypoint[] };
+
+	const COLORS = ["#f59e0b", "#38bdf8"];
+
+	function initMap() {
+		const dataEl = document.getElementById("route-data");
+		const mapEl = document.getElementById("route-map");
+		const legendEl = document.getElementById("route-legend");
+		if (!dataEl || !mapEl || !legendEl) return;
+
+		const data: ClientRoute[] = JSON.parse(dataEl.textContent ?? "[]");
+
+		const map = L.map(mapEl, { scrollWheelZoom: false, attributionControl: false });
+
+		L.tileLayer(
+			"https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+			{
+				attribution:
+					"Tiles © <a href='https://www.esri.com/'>Esri</a> — Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community",
+				maxZoom: 19,
+			},
+		).addTo(map);
+
+		const allLatLngs: L.LatLngExpression[] = [];
+
+		data.forEach((route, idx) => {
+			const color = COLORS[idx % COLORS.length];
+			const coords = route.waypoints.map((w) => w.coord as L.LatLngExpression);
+			allLatLngs.push(...coords);
+
+			L.polyline(coords, { color, weight: 4, opacity: 0.9 }).addTo(map);
+
+			route.waypoints.forEach((wp) => {
+				L.circleMarker(wp.coord as L.LatLngExpression, {
+					radius: 7,
+					fillColor: color,
+					color: "#ffffff",
+					weight: 2,
+					opacity: 1,
+					fillOpacity: 1,
+				})
+					.addTo(map)
+					.bindPopup(`<strong>${wp.name}</strong>`);
+			});
+
+			const badge = document.createElement("span");
+			badge.style.cssText = `background:${color}33;border:1.5px solid ${color};`;
+			badge.className =
+				"inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium text-white";
+			badge.innerHTML = `<span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block"></span>${route.label}`;
+			legendEl.appendChild(badge);
+		});
+
+		if (allLatLngs.length) {
+			map.fitBounds(L.latLngBounds(allLatLngs), { padding: [32, 32] });
+		}
+
+		document.getElementById("map-placeholder")?.remove();
+	}
+
+	// Lazy-init: only load Leaflet tiles when the section enters the viewport
+	const section = document.getElementById("route-map")?.closest("section");
+	if (section) {
+		new IntersectionObserver(
+			(entries, obs) => {
+				if (entries[0].isIntersecting) {
+					obs.disconnect();
+					initMap();
+				}
+			},
+			{ rootMargin: "200px" },
+		).observe(section);
+	} else {
+		initMap();
+	}
+</script>
