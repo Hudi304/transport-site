@@ -1,33 +1,33 @@
-export type DayGroup = "weekdays" | "saturday" | "sunday" | "daily";
+import { Waypoint, Route } from "./route";
 
-export interface Stop {
-	id: string;
-	deltaMinutes: number;
-}
+const targuJiu        = Waypoint.new("Târgu Jiu");
+const pitesti         = Waypoint.new("Pitești");
+const bumbestii       = Waypoint.new("Bumbești");
+const craiova         = Waypoint.new("Craiova");
+const otopeniAeroport = Waypoint.new("Otopeni (Aeroport)");
 
-export interface Departure {
-	time: string;
-	days: DayGroup;
-}
+const targuJiuCraiova = Route.new(targuJiu, craiova)
+	.via(bumbestii, 30)
+	.via(craiova,   60);
 
-export interface Route {
-	id: string;
-	stops: Stop[];
-	departures: Departure[];
-}
+const targuJiuOtopeni = Route.new(targuJiu, otopeniAeroport)
+	.via(pitesti,         75)
+	.via(otopeniAeroport, 105);
 
 export const routes: Route[] = [
-	{
-		id: "bucharest-targu-jiu",
-		stops: [
-			{ id: "bucharest", deltaMinutes: 0 },
-			{ id: "pitesti", deltaMinutes: 75 },
-			{ id: "ramnicu", deltaMinutes: 165 },
-			{ id: "targu_jiu", deltaMinutes: 270 },
-		],
-		departures: [
-			{ time: "08:00", days: "weekdays" },
-			{ time: "18:00", days: "weekdays" },
-		],
-	},
+	targuJiuCraiova.departing([
+		{ time: "08:00", days: "weekdays" },
+		{ time: "18:00", days: "weekdays" },
+	]),
+	targuJiuCraiova.reversed([
+		{ time: "10:30", days: "thursday" },
+	]),
+
+	targuJiuOtopeni.departing([
+		{ time: "06:00", days: "daily"  },
+		{ time: "12:00", days: "monday" },
+	]),
+	targuJiuOtopeni.reversed([
+		{ time: "21:00", days: "monday" },
+	]),
 ];

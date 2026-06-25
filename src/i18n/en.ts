@@ -7,7 +7,34 @@ export default {
 	},
 	home: {
 		title: "Transport Company",
-		subtitle: "Fast and reliable transport services.",
+		subtitle: "Passenger transport between Târgu Jiu, Craiova and Otopeni. Fast, safe, comfortable.",
+		cta: "Book on WhatsApp",
+		features: {
+			heading: "Why choose us?",
+			items: [
+				{
+					icon: "⏱",
+					title: "On time",
+					description: "We depart at the scheduled time. Every time.",
+				},
+				{
+					icon: "🚌",
+					title: "Comfort",
+					description: "Modern, air-conditioned vehicles with generous luggage space.",
+				},
+				{
+					icon: "📍",
+					title: "Direct routes",
+					description: "No changes. You arrive straight at your destination.",
+				},
+			],
+		},
+		contactStrip: {
+			heading: "Book a seat now",
+			subtitle: "Call us or message on WhatsApp. We reply quickly.",
+			phone: "+40 xxx xxx xxx",
+			cta: "Book on WhatsApp",
+		},
 	},
 	about: {
 		title: "About Us",
@@ -16,16 +43,15 @@ export default {
 	schedule: {
 		title: "Schedule",
 		days: {
+			daily: "Daily",
 			weekdays: "Monday – Friday",
+			monday: "Monday",
+			tuesday: "Tuesday",
+			wednesday: "Wednesday",
+			thursday: "Thursday",
+			friday: "Friday",
 			saturday: "Saturday",
 			sunday: "Sunday",
-			daily: "Daily",
-		} as Record<string, string>,
-		stops: {
-			bucharest: "Bucharest",
-			pitesti: "Pitești",
-			ramnicu: "Râmnicu Vâlcea",
-			targu_jiu: "Târgu Jiu",
 		} as Record<string, string>,
 		table: {
 			stop: "Stop",

@@ -7,7 +7,34 @@ export default {
 	},
 	home: {
 		title: "Transport Company",
-		subtitle: "Servicii de transport rapide și fiabile.",
+		subtitle: "Transportăm pasageri între Târgu Jiu, Craiova și Otopeni. Rapid, sigur, confortabil.",
+		cta: "Rezervă pe WhatsApp",
+		features: {
+			heading: "De ce să ne alegi?",
+			items: [
+				{
+					icon: "⏱",
+					title: "Punctualitate",
+					description: "Plecăm la ora fixă. Întotdeauna.",
+				},
+				{
+					icon: "🚌",
+					title: "Confort",
+					description: "Vehicule moderne, climatizate, cu spațiu generos pentru bagaje.",
+				},
+				{
+					icon: "📍",
+					title: "Trasee directe",
+					description: "Fără schimbări. Ajungi direct la destinație.",
+				},
+			],
+		},
+		contactStrip: {
+			heading: "Rezervă un loc acum",
+			subtitle: "Sună-ne sau scrie pe WhatsApp. Răspundem rapid.",
+			phone: "+40 xxx xxx xxx",
+			cta: "Rezervă pe WhatsApp",
+		},
 	},
 	about: {
 		title: "Despre Noi",
@@ -16,16 +43,15 @@ export default {
 	schedule: {
 		title: "Program",
 		days: {
+			daily: "Zilnic",
 			weekdays: "Luni – Vineri",
+			monday: "Luni",
+			tuesday: "Marți",
+			wednesday: "Miercuri",
+			thursday: "Joi",
+			friday: "Vineri",
 			saturday: "Sâmbătă",
 			sunday: "Duminică",
-			daily: "Zilnic",
-		} as Record<string, string>,
-		stops: {
-			bucharest: "București",
-			pitesti: "Pitești",
-			ramnicu: "Râmnicu Vâlcea",
-			targu_jiu: "Târgu Jiu",
 		} as Record<string, string>,
 		table: {
 			stop: "Localitate",

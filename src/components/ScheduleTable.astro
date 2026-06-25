@@ -15,33 +15,34 @@ const t = useTranslations(lang);
 <div class="mt-8 space-y-10">
 	{
 		routes.map((route) => {
+			const stops = route.stops;
 			const colTimes = route.departures.map((dep) =>
-				computeStopTimes(route.stops, dep.time)
+				computeStopTimes(stops, dep.time)
 			);
 
 			return (
 				<div>
-					<div class="overflow-x-auto rounded-lg">
+					<h2 class="mb-4 text-xl font-semibold">{route.heading}</h2>
+					<div class="overflow-x-auto rounded-lg border border-slate-600">
 						<table class="w-full text-left text-sm">
-							<thead class="bg-slate-700 text-gray-300">
+							<thead class="bg-slate-900 text-slate-300">
 								<tr>
-									<th class="px-4 py-3 font-medium">{t.schedule.table.stop}</th>
+									<th class="px-4 py-3 font-semibold">{t.schedule.table.stop}</th>
 									{route.departures.map((dep) => (
-										<th class="px-4 py-3 font-medium text-center">
+										<th class="px-4 py-3 font-semibold text-center">
 											<span class="block text-white text-base font-bold">{dep.time}</span>
-											<span class="text-xs">{t.schedule.days[dep.days]}</span>
+											<span class="text-xs text-slate-400">{t.schedule.days[dep.days]}</span>
 										</th>
 									))}
 								</tr>
 							</thead>
-							<tbody>
-								{route.stops.map((stop, stopIdx) => (
-									<tr class="border-t border-slate-700 even:bg-slate-800/50">
-										<td class="px-4 py-3 font-medium">
-											{t.schedule.stops[stop.id] ?? stop.id}
-										</td>
+
+							<tbody class="bg-slate-800">
+								{stops.map((stop, stopIdx) => (
+									<tr class="border-t border-slate-700 even:bg-slate-700/40">
+										<td class="px-4 py-3 font-medium text-slate-100">{stop.name}</td>
 										{colTimes.map((col) => (
-											<td class="px-4 py-3 text-center tabular-nums">
+											<td class="px-4 py-3 text-center tabular-nums text-slate-200">
 												{col[stopIdx].time}
 											</td>
 										))}
