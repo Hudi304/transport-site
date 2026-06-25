@@ -15,10 +15,21 @@ export default {
 	},
 	schedule: {
 		title: "Schedule",
-		departures: [
-			{ days: "Monday - Friday", time: "08:00" },
-			{ days: "Monday - Friday", time: "18:00" },
-		],
+		days: {
+			weekdays: "Monday – Friday",
+			saturday: "Saturday",
+			sunday: "Sunday",
+			daily: "Daily",
+		} as Record<string, string>,
+		stops: {
+			bucharest: "Bucharest",
+			pitesti: "Pitești",
+			ramnicu: "Râmnicu Vâlcea",
+			targu_jiu: "Târgu Jiu",
+		} as Record<string, string>,
+		table: {
+			stop: "Stop",
+		},
 	},
 	contact: {
 		title: "Contact",

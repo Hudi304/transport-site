@@ -1,0 +1,57 @@
+---
+import { routes } from "../data/schedule";
+import { computeStopTimes } from "../utils/schedule";
+import { useTranslations, defaultLocale } from "../i18n/index";
+import type { Locale } from "../i18n/index";
+
+interface Props {
+	lang?: Locale;
+}
+
+const { lang = defaultLocale } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="mt-8 space-y-10">
+	{
+		routes.map((route) => {
+			const colTimes = route.departures.map((dep) =>
+				computeStopTimes(route.stops, dep.time)
+			);
+
+			return (
+				<div>
+					<div class="overflow-x-auto rounded-lg">
+						<table class="w-full text-left text-sm">
+							<thead class="bg-slate-700 text-gray-300">
+								<tr>
+									<th class="px-4 py-3 font-medium">{t.schedule.table.stop}</th>
+									{route.departures.map((dep) => (
+										<th class="px-4 py-3 font-medium text-center">
+											<span class="block text-white text-base font-bold">{dep.time}</span>
+											<span class="text-xs">{t.schedule.days[dep.days]}</span>
+										</th>
+									))}
+								</tr>
+							</thead>
+							<tbody>
+								{route.stops.map((stop, stopIdx) => (
+									<tr class="border-t border-slate-700 even:bg-slate-800/50">
+										<td class="px-4 py-3 font-medium">
+											{t.schedule.stops[stop.id] ?? stop.id}
+										</td>
+										{colTimes.map((col) => (
+											<td class="px-4 py-3 text-center tabular-nums">
+												{col[stopIdx].time}
+											</td>
+										))}
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			);
+		})
+	}
+</div>

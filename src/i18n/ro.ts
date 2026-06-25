@@ -15,10 +15,21 @@ export default {
 	},
 	schedule: {
 		title: "Program",
-		departures: [
-			{ days: "Luni - Vineri", time: "08:00" },
-			{ days: "Luni - Vineri", time: "18:00" },
-		],
+		days: {
+			weekdays: "Luni – Vineri",
+			saturday: "Sâmbătă",
+			sunday: "Duminică",
+			daily: "Zilnic",
+		} as Record<string, string>,
+		stops: {
+			bucharest: "București",
+			pitesti: "Pitești",
+			ramnicu: "Râmnicu Vâlcea",
+			targu_jiu: "Târgu Jiu",
+		} as Record<string, string>,
+		table: {
+			stop: "Localitate",
+		},
 	},
 	contact: {
 		title: "Contact",

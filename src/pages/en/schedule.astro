@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/layout.astro";
+import ScheduleTable from "../../components/ScheduleTable.astro";
 import { useTranslations } from "../../i18n/index";
 
 const t = useTranslations("en");
@@ -8,16 +9,6 @@ const t = useTranslations("en");
 <Layout title={t.schedule.title} lang="en">
 	<section class="px-4 py-12">
 		<h1 class="text-4xl font-bold">{t.schedule.title}</h1>
-
-		<div class="mt-8 space-y-4">
-			{
-				t.schedule.departures.map((d) => (
-					<div class="rounded-lg bg-slate-800 p-4">
-						<p class="font-medium">{d.days}</p>
-						<p class="text-2xl font-bold">{d.time}</p>
-					</div>
-				))
-			}
-		</div>
+		<ScheduleTable lang="en" />
 	</section>
 </Layout>
