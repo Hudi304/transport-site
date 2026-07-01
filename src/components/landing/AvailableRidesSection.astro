@@ -1,0 +1,270 @@
+---
+import type { useTranslations } from "../../i18n/index";
+import Dropdown from "./Dropdown.astro";
+
+interface Props {
+  basePath: string;
+  availableRides: ReturnType<typeof useTranslations>["home"]["availableRides"];
+  whatsappHref: string;
+}
+
+const { basePath, availableRides, whatsappHref } = Astro.props;
+const itinerary = availableRides.card.itinerary;
+const pickupNoteText = itinerary.stops.find((s) => s.note)?.note ?? "";
+---
+
+<section class="relative overflow-hidden">
+  <img
+    src={`${basePath}/world_map.svg`}
+    alt=""
+    aria-hidden="true"
+    class="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none"
+  />
+
+  <div class="relative z-10 max-w-page mx-auto px-5 py-10">
+    <div class="lg:flex lg:items-baseline lg:gap-4">
+      <h2 class="text-gray-900 font-bold uppercase tracking-wide text-2xl">
+        {availableRides.heading}
+      </h2>
+      <p class="text-violet-500 font-medium mt-1 lg:mt-0">
+        {availableRides.period}
+      </p>
+    </div>
+
+    <div class="mt-6 lg:flex lg:justify-center lg:gap-6 lg:items-start">
+      <div
+        class="lg:w-[560px] lg:shrink-0 rounded-2xl border-2 border-dashed border-violet-200 bg-white p-5"
+      >
+        <h3
+          class="text-violet-500 font-bold uppercase tracking-wide pb-3 border-b border-gray-100"
+        >
+          {availableRides.card.title}
+        </h3>
+
+        <Dropdown
+          id="day-dropdown"
+          class="mt-4"
+          label={availableRides.card.dayLabel}
+          value={availableRides.card.dayValue}
+          options={[{ value: availableRides.card.dayValue }]}
+        />
+
+        <div class="hidden lg:flex lg:justify-center lg:py-1">
+          <svg
+            class="w-4 h-4 text-violet-500"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 4.5v13.5m0 0-4.5-4.5m4.5 4.5 4.5-4.5"></path>
+          </svg>
+        </div>
+
+        <Dropdown
+          id="location-dropdown"
+          class="mt-4 lg:mt-0"
+          label={availableRides.card.locationLabel}
+          value={availableRides.card.locationValue}
+          options={itinerary.stops.map((stop) => ({ value: stop.name, time: stop.time }))}
+        />
+      </div>
+
+      <div
+        class="mt-4 lg:mt-0 lg:w-[560px] lg:shrink-0 rounded-2xl border-2 border-dashed border-violet-200 bg-white p-5"
+      >
+        <div
+          class="flex items-center justify-between pb-3 border-b border-gray-100"
+        >
+          <h3 class="text-violet-500 font-bold uppercase tracking-wide">
+            {itinerary.label}
+          </h3>
+          <div
+            class="flex items-center justify-center gap-2 h-9 px-2 lg:px-4 rounded-lg border border-violet-300 shrink-0"
+          >
+            <svg
+              class="w-5 h-5 text-violet-500 shrink-0"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+              ></path>
+            </svg>
+            <span
+              class="hidden lg:inline text-violet-500 text-sm font-medium whitespace-nowrap"
+              >{itinerary.viewOnMap}</span
+            >
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between mt-4">
+          <p class="text-gray-900 font-bold">
+            {itinerary.departureLabel}
+            {itinerary.departureTime}
+          </p>
+          <span
+            class="inline-flex items-center gap-1 rounded-full bg-violet-50 text-violet-600 text-sm font-medium px-3 py-1"
+          >
+            <svg
+              class="w-4 h-4 shrink-0"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path>
+            </svg>
+            {itinerary.duration}
+          </span>
+        </div>
+
+        <div class="relative mt-5">
+          <div class="absolute left-[5px] top-1 bottom-1 w-px bg-gray-200">
+          </div>
+
+          {
+            itinerary.stops.map((stop, i) => {
+              const isLast = i === itinerary.stops.length - 1;
+              const isSelectedPickup = stop.name === availableRides.card.locationValue;
+              return (
+                <div
+                  class="relative flex gap-3 pb-4 last:pb-0"
+                  data-stop-name={stop.name}
+                  data-stop-time={stop.time}
+                >
+                  <div
+                    class:list={[
+                      "mt-1.5 w-2.5 h-2.5 rounded-full shrink-0",
+                      isLast ? "bg-violet-500" : "bg-gray-300",
+                    ]}
+                  />
+                  <div>
+                    <p
+                      class:list={[
+                        "font-semibold",
+                        isLast ? "text-violet-500" : "text-gray-900",
+                      ]}
+                    >
+                      {stop.name}
+                    </p>
+                    <p class="text-gray-400 text-sm">{stop.time}</p>
+                    <p
+                      class:list={[
+                        "pickup-note flex items-center gap-1 text-violet-500 text-sm mt-0.5",
+                        isSelectedPickup ? "" : "hidden",
+                      ]}
+                    >
+                      <svg
+                        class="w-3.5 h-3.5 shrink-0"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                        />
+                      </svg>
+                      {pickupNoteText}
+                    </p>
+                  </div>
+                </div>
+              );
+            })
+          }
+        </div>
+
+        <div class="mt-2 pt-4 border-t border-gray-100 space-y-2">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-500">{itinerary.dateLabel}</span>
+            <span class="text-gray-900 font-medium">{itinerary.dateValue}</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-500">{itinerary.pickupLabel}</span>
+            <span id="itinerary-pickup-value" class="text-gray-900 font-medium"
+              >{itinerary.pickupValue}</span
+            >
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-500">{itinerary.arrivalLabel}</span>
+            <span class="text-gray-900 font-medium"
+              >{itinerary.arrivalValue}</span
+            >
+          </div>
+        </div>
+
+        <div
+          class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100"
+        >
+          <span class="text-violet-500 font-bold">{itinerary.totalLabel}</span>
+          <span class="text-violet-500 font-bold">
+            {itinerary.totalPrice}
+            <span class="text-violet-400 font-medium text-sm"
+              >{itinerary.totalUnit}</span
+            >
+          </span>
+        </div>
+
+        <a
+          href={whatsappHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-4 inline-flex w-full items-center justify-center gap-3 rounded-full bg-green-600 px-6 py-3 font-semibold text-white hover:bg-green-500 transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 fill-current"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+            ></path>
+          </svg>
+          {itinerary.cta}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const locationDropdown = document.getElementById("location-dropdown");
+
+  locationDropdown?.addEventListener("dropdown-select", (e) => {
+    const { value, time } = (e as CustomEvent<{ value: string; time: string }>).detail;
+
+    const pickupValueEl = document.getElementById("itinerary-pickup-value");
+    if (pickupValueEl) pickupValueEl.textContent = time ? `${value} - ${time}` : value;
+
+    document.querySelectorAll<HTMLElement>(".pickup-note").forEach((note) => {
+      const row = note.closest<HTMLElement>("[data-stop-name]");
+      note.classList.toggle("hidden", row?.dataset.stopName !== value);
+    });
+  });
+</script>

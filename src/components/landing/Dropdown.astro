@@ -1,0 +1,105 @@
+---
+interface Option {
+  value: string;
+  label?: string;
+  time?: string;
+}
+
+interface Props {
+  id: string;
+  label: string;
+  value: string;
+  options: Option[];
+  class?: string;
+}
+
+const { id, label, value, options, class: className } = Astro.props;
+---
+
+<div id={id} class:list={["relative", className]} data-dropdown>
+  <p class="text-gray-500 text-sm mb-1">{label}</p>
+  <button
+    type="button"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    data-dropdown-button
+    class="w-full flex items-center justify-between rounded-full border border-violet-300 px-4 py-3 bg-white"
+  >
+    <span data-dropdown-value class="text-gray-900 font-medium">{value}</span>
+    <svg
+      class="w-5 h-5 shrink-0 text-violet-500"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m19.5 8.25-7.5 7.5-7.5-7.5"></path>
+    </svg>
+  </button>
+  <ul
+    role="listbox"
+    data-dropdown-menu
+    class="hidden absolute z-20 mt-2 w-full rounded-2xl border border-violet-200 bg-white shadow-lg overflow-hidden"
+  >
+    {options.map((option) => (
+      <li
+        role="option"
+        data-value={option.value}
+        data-time={option.time}
+        class="px-4 py-3 text-gray-900 font-medium hover:bg-violet-50 cursor-pointer"
+      >
+        {option.label ?? option.value}
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script>
+  function closeAllMenus() {
+    document
+      .querySelectorAll<HTMLElement>("[data-dropdown-menu]")
+      .forEach((el) => el.classList.add("hidden"));
+    document
+      .querySelectorAll<HTMLElement>("[data-dropdown-button]")
+      .forEach((el) => el.setAttribute("aria-expanded", "false"));
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-dropdown]").forEach((dropdown) => {
+    const button = dropdown.querySelector<HTMLButtonElement>("[data-dropdown-button]");
+    const menu = dropdown.querySelector<HTMLElement>("[data-dropdown-menu]");
+    if (!button || !menu) return;
+
+    button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.classList.contains("hidden");
+      closeAllMenus();
+      if (!isOpen) {
+        menu.classList.remove("hidden");
+        button.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    menu.querySelectorAll<HTMLLIElement>('[role="option"]').forEach((option) => {
+      option.addEventListener("click", () => {
+        const valueEl = dropdown.querySelector<HTMLElement>("[data-dropdown-value]");
+        const value = option.dataset.value ?? "";
+        if (valueEl) valueEl.textContent = value;
+
+        dropdown.dispatchEvent(
+          new CustomEvent("dropdown-select", {
+            bubbles: true,
+            detail: { value, time: option.dataset.time ?? "" },
+          })
+        );
+
+        closeAllMenus();
+      });
+    });
+  });
+
+  document.addEventListener("click", closeAllMenus);
+</script>

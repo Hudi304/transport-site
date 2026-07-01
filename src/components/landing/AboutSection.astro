@@ -1,0 +1,38 @@
+---
+import type { useTranslations } from "../../i18n/index";
+
+interface Props {
+  basePath: string;
+  about: ReturnType<typeof useTranslations>["home"]["about"];
+  featureIcons: Record<string, string>;
+}
+
+const { basePath, about, featureIcons } = Astro.props;
+---
+
+<section class="bg-white">
+  <div class="max-w-page mx-auto px-5 py-10">
+    <div class="lg:flex lg:gap-12 lg:items-start ">
+      <div class="lg:w-1/2">
+        <h2 class="text-2xl font-bold text-gray-900 uppercase tracking-wide">
+          {about.heading}
+        </h2>
+
+        <div class="mt-4 space-y-4 text-gray-500">
+          {about.paragraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </div>
+      </div>
+
+      <div class="mt-8 lg:mt-0 lg:w-1/2 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {about.features.map((feature) => (
+          <div class="rounded-2xl bg-gray-50 shadow-sm p-6 flex flex-col items-center text-center gap-3 max-lg:w-[192px] max-lg:mx-auto">
+            <img src={`${basePath}/icons/${featureIcons[feature.icon]}`} alt="" aria-hidden="true" class="w-10 h-10" />
+            <p class="font-semibold text-gray-900">{feature.title}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

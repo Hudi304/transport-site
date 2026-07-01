@@ -44,6 +44,6 @@ html {
 
 @layer utilities {
   .debug {
-    @apply ring-1 ring-black;
+    @apply ring-1 ring-black border border-white;
   }
 }

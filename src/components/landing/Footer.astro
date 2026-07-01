@@ -1,0 +1,40 @@
+---
+import type { useTranslations } from "../../i18n/index";
+
+interface Props {
+  basePath: string;
+  footer: ReturnType<typeof useTranslations>["footer"];
+  contactUrl: string;
+  copyrightText: string;
+}
+
+const { basePath, footer, contactUrl, copyrightText } = Astro.props;
+---
+
+<footer class="bg-purple-500 text-white">
+  <div class="max-w-page mx-auto px-5 py-10">
+    <div class="lg:flex lg:items-stretch lg:gap-16">
+      <div class="lg:shrink-0">
+        <img src={`${basePath}/branding/zabo_logo_white.svg`} alt="ZaboTravel" class="h-7 w-auto" />
+        <p class="text-gray-300 text-xs mt-1 uppercase tracking-wide">{footer.tagline}</p>
+      </div>
+
+      <div class="hidden lg:block lg:w-px lg:bg-white/10"></div>
+
+      <div class="border-t border-white/10 mt-6 pt-6 lg:border-t-0 lg:mt-0 lg:pt-0 lg:flex-1">
+        <h3 class="font-bold">{footer.supportHeading}</h3>
+        <ul class="mt-3 space-y-2 text-gray-300 text-sm">
+          <li><a href="#" class="hover:text-white">{footer.links.terms}</a></li>
+          <li><a href="#" class="hover:text-white">{footer.links.privacy}</a></li>
+          <li><a href="#" class="hover:text-white">{footer.links.faq}</a></li>
+          <li><a href={contactUrl} class="hover:text-white">{footer.links.contact}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10 mt-6 pt-4 text-center text-gray-400 text-xs space-y-1">
+      <p>{copyrightText}</p>
+      <p>{footer.rights}</p>
+    </div>
+  </div>
+</footer>
