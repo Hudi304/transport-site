@@ -1,1 +1,49 @@
 @import "tailwindcss";
+
+html {
+  overflow-x: hidden;
+}
+
+@theme {
+  --width-page: 1440px;
+
+  --color-purple-50: #ece9f2;
+  --color-purple-100: #c4bcd7;
+  --color-purple-200: #a89cc3;
+  --color-purple-300: #806ea8;
+  --color-purple-400: #685297;
+  --color-purple-500: #42277d;
+  --color-purple-600: #3c2372;
+  --color-purple-700: #2f1c59;
+  --color-purple-800: #241545;
+  --color-purple-900: #1c1035;
+
+  --color-violet-50: #f9e8f2;
+  --color-violet-100: #ecb7d6;
+  --color-violet-200: #e395c2;
+  --color-violet-300: #d664a6;
+  --color-violet-400: #ce4695;
+  --color-violet-500: #c2187a;
+  --color-violet-600: #b1166f;
+  --color-violet-700: #8a1157;
+  --color-violet-800: #6b0d43;
+  --color-violet-900: #510a33;
+
+  --color-gray-25: #f8f8f8;
+  --color-gray-50: #f1f1f1;
+  --color-gray-100: #d3d3d3;
+  --color-gray-200: #bdbdbd;
+  --color-gray-300: #9f9f9f;
+  --color-gray-400: #8d8d8d;
+  --color-gray-500: #707070;
+  --color-gray-600: #666666;
+  --color-gray-700: #505050;
+  --color-gray-800: #3e3e3e;
+  --color-gray-900: #272727;
+}
+
+@layer utilities {
+  .debug {
+    @apply ring-1 ring-black;
+  }
+}

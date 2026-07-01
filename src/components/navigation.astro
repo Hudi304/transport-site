@@ -35,41 +35,49 @@ const navLinks = [
 ];
 ---
 
-<header class="sticky top-0 z-40 h-16 bg-slate-800 px-6 flex items-center justify-between text-white max-w-6xl mx-auto">
-	<div class="text-lg font-bold">Transport</div>
+<div class="fixed top-0 left-0 right-0 z-40 px-4 pt-3" transition:persist data-basepath={basePath}>
+	<header
+		class="max-w-[1440px] mx-auto h-14 flex items-center justify-between px-5 text-gray-900 rounded-2xl border border-black/[0.06] backdrop-blur-md"
+		style="background: #FFFFFFB2; box-shadow: 0px 2px 20px 5px #0000000D;"
+	>
+		<!-- Logo -->
 
-	<!-- Desktop nav -->
-	<nav class="hidden lg:flex items-center gap-1">
-		{navLinks.map(({ href, label, path }) => (
-			<a
-				href={href}
-				class={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-					isActive(path)
-						? "bg-slate-700 text-white"
-						: "text-gray-300 hover:bg-slate-700 hover:text-white"
-				}`}
+		<img src={`${basePath}/branding/zabo_logo.svg`} alt="Transport" class="h-8 w-auto" />
+
+		<!-- Desktop nav -->
+		<nav class="hidden lg:flex items-center gap-0.5">
+			{navLinks.map(({ href, label, path }) => (
+				<a
+					href={href}
+					data-nav-path={path}
+					class={`px-4 py-1.5 rounded-xl text-sm font-medium transition-all duration-150 ${
+						isActive(path)
+							? "bg-black/[0.08] text-gray-900"
+							: "text-gray-500 hover:bg-black/[0.05] hover:text-gray-900"
+					}`}
+				>
+					{label}
+				</a>
+			))}
+		</nav>
+
+		<div class="flex items-center gap-3">
+			<div class="flex items-center gap-2 text-xs font-semibold tracking-wider">
+				<a href={roUrl} class={lang === "ro" ? "text-gray-900" : "text-gray-400 hover:text-gray-700 transition-colors"}>RO</a>
+				<span class="text-gray-300">|</span>
+				<a href={enUrl} class={lang === "en" ? "text-gray-900" : "text-gray-400 hover:text-gray-700 transition-colors"}>EN</a>
+			</div>
+
+			<button
+				id="menu-button"
+				class="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl text-gray-500 hover:bg-black/[0.06] hover:text-gray-900 transition-colors text-lg"
+				aria-label="Open navigation menu"
 			>
-				{label}
-			</a>
-		))}
-	</nav>
-
-	<div class="flex items-center gap-4">
-		<div class="flex items-center gap-2 text-sm font-semibold">
-			<a href={roUrl} class={lang === "ro" ? "text-white" : "text-gray-400 hover:text-white"}>RO</a>
-			<span class="text-gray-500">|</span>
-			<a href={enUrl} class={lang === "en" ? "text-white" : "text-gray-400 hover:text-white"}>EN</a>
+				☰
+			</button>
 		</div>
-
-		<button
-			id="menu-button"
-			class="lg:hidden w-12 h-12 flex items-center justify-center text-2xl"
-			aria-label="Open navigation menu"
-		>
-			☰
-		</button>
-	</div>
-</header>
+	</header>
+</div>
 
 <!-- Mobile drawer (unchanged) -->
 <nav
@@ -136,6 +144,28 @@ const navLinks = [
 		menu?.classList.add("-translate-x-full");
 		document.body.style.overflow = "";
 	}
+
+	function updateActiveLink() {
+		const nav = document.querySelector<HTMLElement>('[data-basepath]');
+		if (!nav) return;
+		const base = (nav.dataset.basepath ?? '').replace(/\/$/, '');
+		const pathname = window.location.pathname;
+		const withoutBase = pathname.startsWith(base) ? pathname.slice(base.length) || '/' : pathname;
+		const slug = withoutBase.replace(/^\/en/, '') || '/';
+		const current = slug.replace(/\/$/, '') || '/';
+
+		nav.querySelectorAll<HTMLAnchorElement>('[data-nav-path]').forEach(link => {
+			const path = link.dataset.navPath!;
+			const active = path === '/' ? current === '/' : current.startsWith(path);
+			link.classList.toggle('bg-black/[0.08]', active);
+			link.classList.toggle('text-gray-900', active);
+			link.classList.toggle('text-gray-500', !active);
+			link.classList.toggle('hover:bg-black/[0.05]', !active);
+			link.classList.toggle('hover:text-gray-900', !active);
+		});
+	}
+
+	document.addEventListener('astro:after-swap', updateActiveLink);
 
 	openButton?.addEventListener("click", openMenu);
 	closeButton?.addEventListener("click", closeMenu);
